@@ -152,4 +152,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return null;
     }
+
+    public double getEmployeeBasicSalary(String employeeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_EMPLOYEE_BASIC_SALARY};
+        String selection = COLUMN_EMPLOYEE_ID + " = ?";
+        String[] selectionArgs = {employeeId};
+
+        Cursor cursor = db.query(TABLE_EMPLOYEE, columns, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            double salary = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_EMPLOYEE_BASIC_SALARY));
+            cursor.close();
+            return salary;
+        }
+        cursor.close();
+        return 0.0;
+    }
 }
