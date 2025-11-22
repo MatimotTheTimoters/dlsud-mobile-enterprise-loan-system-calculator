@@ -42,13 +42,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initializeViews() {
         // Map the existing EditText fields to our variables
-        etEmployeeId = findViewById(R.id.roundedEditText); // Was "Email"
-        etBasicSalary = findViewById(R.id.roundedEditText2); // Was "Basic Salary" (keep as is)
-        etPassword = findViewById(R.id.roundedEditText3); // Was "Password" (keep as is)
-        etConfirmPassword = findViewById(R.id.roundedEditText4); // Was "Confirm Password" (keep as is)
+        etEmployeeId = findViewById(R.id.etEmployeeId); // Was "Email"
+        etBasicSalary = findViewById(R.id.etBasicSalary); // Was "Basic Salary" (keep as is)
+        etPassword = findViewById(R.id.etPassword); // Was "Password" (keep as is)
+        etConfirmPassword = findViewById(R.id.etConfirmPassword); // Was "Confirm Password" (keep as is)
 
-        btnRegister = findViewById(R.id.button);
-        btnSignIn = findViewById(R.id.button1);
+        btnRegister = findViewById(R.id.btnRegister);
+        btnSignIn = findViewById(R.id.btnSignIn);
 
         // We need to add more fields programmatically or modify the XML
         // For now, we'll use the available fields and add the missing ones later

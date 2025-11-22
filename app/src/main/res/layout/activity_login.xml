@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_brown"
-    tools:context=".LoginActivity">
+    tools:context=".EmployeeLoginActivity">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -81,14 +81,14 @@
         app:srcCompat="@drawable/wave_bottom" />
 
     <EditText
-        android:id="@+id/roundedEditText5"
+        android:id="@+id/etEmployeeId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:background="@drawable/rounded_edittext"
         android:fontFamily="@font/poppins"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
+        android:hint="Employee ID"
+        android:inputType="text"
         android:padding="16dp"
         android:textColor="#333333"
         android:textColorHint="#999999"
@@ -100,7 +100,7 @@
         app:layout_constraintVertical_bias="0.422" />
 
     <EditText
-        android:id="@+id/roundedEditText7"
+        android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -133,36 +133,34 @@
         app:srcCompat="@drawable/wave_top" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button2"
+        android:id="@+id/btnRegister"
         android:layout_width="151dp"
         android:layout_height="55dp"
         android:layout_marginBottom="180dp"
         android:background="@drawable/button_register"
         android:fontFamily="@font/poppins"
         android:text="Register"
-        android:textSize="60px"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
         app:layout_constraintVertical_bias="0.852" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button3"
+        android:id="@+id/btnSignIn"
         android:layout_width="151dp"
         android:layout_height="55dp"
         android:layout_marginBottom="248dp"
         android:background="@drawable/button_register2"
         android:fontFamily="@font/poppins"
         android:text="Sign in"
-        android:textSize="60px"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
         app:layout_constraintVertical_bias="0.961" />
 </androidx.constraintlayout.widget.ConstraintLayout>

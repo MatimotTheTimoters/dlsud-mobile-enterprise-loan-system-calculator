@@ -35,10 +35,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        etEmployeeId = findViewById(R.id.roundedEditText5);
-        etPassword = findViewById(R.id.roundedEditText7);
-        btnSignIn = findViewById(R.id.button3);
-        btnRegister = findViewById(R.id.button2);
+        etEmployeeId = findViewById(R.id.etEmployeeId);
+        etPassword = findViewById(R.id.etPassword);
+        btnSignIn = findViewById(R.id.btnSignIn);
+        btnRegister = findViewById(R.id.btnRegister);
 
         // Change hints to match employee login
         etEmployeeId.setHint("Employee ID");
