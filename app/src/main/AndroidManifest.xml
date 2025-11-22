@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoanSystemCalculator">
         <activity
+            android:name=".HomeEmployeeActivity"
+            android:exported="false" />
+        <activity
             android:name=".LandingActivity"
             android:exported="true">
             <intent-filter>
