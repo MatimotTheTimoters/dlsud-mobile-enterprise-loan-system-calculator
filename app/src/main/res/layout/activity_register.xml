@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,200 +8,244 @@
     android:background="@color/primary_brown"
     tools:context=".RegisterActivity">
 
+    <!-- Background waves - Fixed position -->
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:background="@drawable/rounded_image"
-        android:clipToOutline="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.147"
-        app:srcCompat="@drawable/logo2" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="358dp"
-        android:layout_height="41dp"
-        android:fontFamily="@font/righteous"
-        android:text="Register an account"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="50px"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.355" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="101dp"
-        android:layout_height="46dp"
-        android:fontFamily="@font/righteous"
-        android:text="Loans"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="80px"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.083" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="250dp"
-        android:layout_height="67dp"
-        android:fontFamily="@font/righteous"
-        android:text="unBEARable"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="100px"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.024" />
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:elevation="-1dp"
+        android:scaleY="-1"
+        app:srcCompat="@drawable/wave_top" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         app:srcCompat="@drawable/wave_bottom" />
 
-    <EditText
-        android:id="@+id/roundedEditText"
+    <!-- ScrollView for scrollable content -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_edittext"
-        android:fontFamily="@font/poppins"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:padding="16dp"
-        android:textColor="#333333"
-        android:textColorHint="#999999"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.422" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/roundedEditText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_edittext"
-        android:fontFamily="@font/poppins"
-        android:hint="Basic Salary"
-        android:inputType="numberDecimal"
-        android:padding="16dp"
-        android:textColor="#333333"
-        android:textColorHint="#999999"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.531" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="32dp">
 
-    <EditText
-        android:id="@+id/roundedEditText3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_edittext"
-        android:fontFamily="@font/poppins"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:padding="16dp"
-        android:textColor="#333333"
-        android:textColorHint="#999999"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.638" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/rounded_image"
+                android:clipToOutline="true"
+                app:srcCompat="@drawable/logo2" />
 
-    <EditText
-        android:id="@+id/roundedEditText4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_edittext"
-        android:fontFamily="@font/poppins"
-        android:hint="Confirm Password"
-        android:inputType="textPassword"
-        android:padding="16dp"
-        android:textColor="#333333"
-        android:textColorHint="#999999"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.747" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="309dp"
+                android:layout_height="75dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="-62dp"
+                android:layout_marginTop="28dp"
+                android:layout_toEndOf="@id/imageView"
+                android:fontFamily="@font/righteous"
+                android:text="unBEARable"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="130px" />
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:elevation="-1dp"
-        android:scaleY="-1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/wave_top" />
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="101dp"
+                android:layout_height="46dp"
+                android:layout_below="@id/textView"
+                android:layout_marginStart="69dp"
+                android:layout_marginTop="-28dp"
+                android:layout_toEndOf="@id/imageView"
+                android:fontFamily="@font/righteous"
+                android:text="Loans"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="80px" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button"
-        android:layout_width="151dp"
-        android:layout_height="55dp"
-        android:background="@drawable/button_register"
-        android:fontFamily="@font/poppins"
-        android:text="Register"
-        android:textSize="60px"
-        android:textStyle="bold"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
-        app:layout_constraintVertical_bias="0.852" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:layout_below="@id/imageView"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/righteous"
+                android:text="Register an account"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="50px" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button1"
-        android:layout_width="151dp"
-        android:layout_height="55dp"
-        android:background="@drawable/button_register2"
-        android:fontFamily="@font/poppins"
-        android:text="Sign in"
-        android:textSize="60px"
-        android:textStyle="bold"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
-        app:layout_constraintVertical_bias="0.961" />
+            <EditText
+                android:id="@+id/roundedEditText9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView2"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:fontFamily="@font/poppins"
+                android:hint="First Name"
+                android:inputType="text"
+                android:padding="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
 
+            <LinearLayout
+                android:id="@+id/emailContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/roundedEditText9"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <EditText
+                    android:id="@+id/roundedEditText8"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:fontFamily="@font/poppins"
+                    android:hint="Last Name"
+                    android:inputType="text"
+                    android:padding="16dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#999999"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/roundedEditText11"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:fontFamily="@font/poppins"
+                    android:hint="Middle"
+                    android:inputType="text"
+                    android:padding="16dp"
+                    android:textColor="#333333"
+                    android:textColorHint="#999999"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/roundedEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emailContainer"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:fontFamily="@font/poppins"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/roundedEditText2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/roundedEditText"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:fontFamily="@font/poppins"
+                android:hint="Basic Salary"
+                android:inputType="numberDecimal"
+                android:padding="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/roundedEditText3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/roundedEditText2"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:fontFamily="@font/poppins"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/roundedEditText4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/roundedEditText3"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edittext"
+                android:fontFamily="@font/poppins"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button"
+                android:layout_width="151dp"
+                android:layout_height="55dp"
+                android:layout_below="@id/roundedEditText4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/button_register"
+                android:fontFamily="@font/poppins"
+                android:text="Register"
+                android:textSize="60px"
+                android:textStyle="bold"
+                app:backgroundTint="@null" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button1"
+                android:layout_width="151dp"
+                android:layout_height="55dp"
+                android:layout_below="@id/button"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/button_register2"
+                android:fontFamily="@font/poppins"
+                android:text="Sign in"
+                android:textSize="60px"
+                android:textStyle="bold"
+                app:backgroundTint="@null" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
