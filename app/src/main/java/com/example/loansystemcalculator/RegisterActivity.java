@@ -37,29 +37,18 @@ public class RegisterActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         initializeViews();
         setupClickListeners();
-        updateFieldHints(); // Update hints to match employee registration
+        updateFieldHints();
     }
 
     private void initializeViews() {
-        // Map the existing EditText fields to our variables
-        etEmployeeId = findViewById(R.id.roundedEditText); // Was "Email"
-        etBasicSalary = findViewById(R.id.roundedEditText2); // Was "Basic Salary" (keep as is)
-        etPassword = findViewById(R.id.roundedEditText3); // Was "Password" (keep as is)
-        etConfirmPassword = findViewById(R.id.roundedEditText4); // Was "Confirm Password" (keep as is)
+        // Map the existing fields
+        etEmployeeId = findViewById(R.id.etEmployeeId);
+        etBasicSalary = findViewById(R.id.etBasicSalary);
+        etPassword = findViewById(R.id.etPassword);
+        etConfirmPassword = findViewById(R.id.etConfirmPassword);
 
-        btnRegister = findViewById(R.id.button);
-        btnSignIn = findViewById(R.id.button1);
-
-        // We need to add more fields programmatically or modify the XML
-        // For now, we'll use the available fields and add the missing ones later
-        // Let's repurpose the fields:
-        // etEmployeeId = Employee ID
-        // etBasicSalary = Basic Salary (keep)
-        // etPassword = Password (keep)
-        // etConfirmPassword = Confirm Password (keep)
-
-        // We'll need to add firstName, middleInitial, lastName, dateHired fields
-        // For now, we'll use default values and focus on the core functionality
+        btnRegister = findViewById(R.id.btnRegister);
+        btnSignIn = findViewById(R.id.btnSignIn);
     }
 
     private void updateFieldHints() {
@@ -150,13 +139,11 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // For now, using default values for missing fields
-        // In a real app, you'd have these fields in your form
-        String firstName = "First"; // Default value - should be collected from user
-        String middleInitial = null; // Default value - should be collected from user
-        String lastName = "Last"; // Default value - should be collected from user
+        String firstName = "First";
+        String middleInitial = null;
+        String lastName = "Last";
 
-        // Use current date as date hired (you might want a date picker for this)
+        // Use current date as date hired
         String dateHired = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
         // Register employee using DatabaseHelper

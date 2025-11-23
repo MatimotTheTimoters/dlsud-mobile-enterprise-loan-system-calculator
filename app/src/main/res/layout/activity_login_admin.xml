@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_brown"
-    tools:context=".LandingActivity">
+    tools:context=".LoginAdminActivity">
 
     <!-- Wave Top -->
     <ImageView
@@ -57,60 +57,69 @@
         android:clipToOutline="true"
         app:srcCompat="@drawable/logo2" />
 
-    <!-- Welcome Text -->
+    <!-- Admin Login Text -->
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textViewAdminLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageView3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/righteous"
-        android:text="Welcome"
+        android:text="Admin Login"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="24sp" />
 
-    <!-- Register Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRegister"
-        android:layout_width="200dp"
-        android:layout_height="55dp"
+    <!-- Admin ID Input -->
+    <EditText
+        android:id="@+id/etAdminId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewAdminLogin"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/button_register"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_edittext"
         android:fontFamily="@font/poppins"
-        android:text="Register"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="@null" />
+        android:hint="Admin ID"
+        android:inputType="text"
+        android:padding="16dp"
+        android:textColor="#333333"
+        android:textColorHint="#999999"
+        android:textSize="16sp" />
+
+    <!-- Password Input -->
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etAdminId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_edittext"
+        android:fontFamily="@font/poppins"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        android:textColor="#333333"
+        android:textColorHint="#999999"
+        android:textSize="16sp" />
 
     <!-- Login Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         android:layout_width="200dp"
         android:layout_height="55dp"
-        android:layout_below="@id/btnRegister"
+        android:layout_below="@id/etPassword"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/button_register2"
         android:fontFamily="@font/poppins"
         android:text="Login"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="@null" />
-
-    <!-- Admin Login Button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAdminLogin"
-        android:layout_width="200dp"
-        android:layout_height="55dp"
-        android:layout_below="@id/btnLogin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/button_register"
-        android:fontFamily="@font/poppins"
-        android:text="Admin Login"
         android:textSize="18sp"
         android:textStyle="bold"
         app:backgroundTint="@null" />

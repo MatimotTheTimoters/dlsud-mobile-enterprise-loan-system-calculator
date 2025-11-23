@@ -11,23 +11,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LoanSystemCalculator">
-
-        <!-- Other activities -->
-        <activity android:name=".HomeEmployeeActivity"
+        <activity
+            android:name=".HomeAdminActivity"
             android:exported="false" />
-
-        <activity android:name=".LandingActivity"
-            android:exported="true" />
-
-        <!-- STARTUP ACTIVITY -->
-        <activity android:name=".RegisterActivity"
+        <activity
+            android:name=".LoginAdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeEmployeeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LandingActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

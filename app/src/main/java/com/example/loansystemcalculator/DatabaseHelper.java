@@ -16,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      Database Properties
      ----------**/
     private static final String DATABASE_NAME = "LoanSystemCalculator.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     /**----------
      Table Properties
@@ -32,6 +32,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMPLOYEE_PASSWORD_HASH = "passwordHash";
     private static final String COLUMN_EMPLOYEE_BASIC_SALARY = "basicSalary";
 
+    // Admin table fields
+    private static final String TABLE_ADMIN = "Admin";
+    private static final String COLUMN_ADMIN_ID = "adminId";
+    private static final String COLUMN_ADMIN_PASSWORD_HASH = "passwordHash";
+
     // Create Employee table
     private static final String CREATE_EMPLOYEE_TABLE = "CREATE TABLE " + TABLE_EMPLOYEE + "("
             + COLUMN_EMPLOYEE_ID + " VARCHAR(15) PRIMARY KEY,"
@@ -43,6 +48,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_EMPLOYEE_BASIC_SALARY + " DECIMAL(10,2) NOT NULL"
             + ")";
 
+    // Create Admin table
+    private static final String CREATE_ADMIN_TABLE = "CREATE TABLE " + TABLE_ADMIN + "("
+            + COLUMN_ADMIN_ID + " VARCHAR(15) PRIMARY KEY,"
+            + COLUMN_ADMIN_PASSWORD_HASH + " VARCHAR(255) NOT NULL"
+            + ")";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -50,16 +61,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_EMPLOYEE_TABLE);
+        db.execSQL(CREATE_ADMIN_TABLE);
+
+        // Insert default admin account
+        insertDefaultAdmin(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EMPLOYEE);
-        onCreate(db);
+        if (oldVersion < 2) {
+            // Create Admin table for version 2
+            db.execSQL(CREATE_ADMIN_TABLE);
+            // Insert default admin account
+            insertDefaultAdmin(db);
+        }
     }
 
     /**----------
-     Methods
+     Employee Methods
      ----------**/
 
     // Hash password using SHA-256
@@ -153,6 +172,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    // Get employee basic salary
     public double getEmployeeBasicSalary(String employeeId) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {COLUMN_EMPLOYEE_BASIC_SALARY};
@@ -168,5 +188,51 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return 0.0;
+    }
+
+    /**----------
+     Admin Methods
+     ----------**/
+
+    // Insert default admin account
+    private void insertDefaultAdmin(SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ADMIN_ID, "admin");
+        values.put(COLUMN_ADMIN_PASSWORD_HASH, hashPassword("admin123"));
+        db.insert(TABLE_ADMIN, null, values);
+    }
+
+    // Validate admin login
+    public boolean validateAdminLogin(String adminId, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_ADMIN_PASSWORD_HASH};
+        String selection = COLUMN_ADMIN_ID + " = ?";
+        String[] selectionArgs = {adminId};
+
+        Cursor cursor = db.query(TABLE_ADMIN, columns, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            String storedHash = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADMIN_PASSWORD_HASH));
+            cursor.close();
+            return storedHash.equals(hashPassword(password));
+        }
+        cursor.close();
+        return false;
+    }
+
+    // Get all employees (for admin records viewer)
+    public Cursor getAllEmployees() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {
+                COLUMN_EMPLOYEE_ID,
+                COLUMN_EMPLOYEE_FIRST_NAME,
+                COLUMN_EMPLOYEE_MIDDLE_INITIAL,
+                COLUMN_EMPLOYEE_LAST_NAME,
+                COLUMN_EMPLOYEE_DATE_HIRED,
+                COLUMN_EMPLOYEE_BASIC_SALARY
+        };
+
+        return db.query(TABLE_EMPLOYEE, columns, null, null, null, null,
+                COLUMN_EMPLOYEE_LAST_NAME + ", " + COLUMN_EMPLOYEE_FIRST_NAME);
     }
 }

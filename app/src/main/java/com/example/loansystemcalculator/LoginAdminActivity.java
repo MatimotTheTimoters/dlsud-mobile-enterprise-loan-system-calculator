@@ -13,16 +13,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
 
-public class LoginActivity extends AppCompatActivity {
-    private EditText etEmployeeId, etPassword;
-    private MaterialButton btnSignIn, btnRegister;
+public class LoginAdminActivity extends AppCompatActivity {
+
+    private EditText etAdminId, etPassword;
+    private MaterialButton btnLogin;
     private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_landing);
+        setContentView(R.layout.activity_login_admin);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -35,43 +36,28 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        etEmployeeId = findViewById(R.id.etEmployeeId);
+        etAdminId = findViewById(R.id.etAdminId);
         etPassword = findViewById(R.id.etPassword);
-        btnSignIn = findViewById(R.id.btnSignIn);
-        btnRegister = findViewById(R.id.btnRegister);
-
-        // Change hints to match employee login
-        etEmployeeId.setHint("Employee ID");
-        etPassword.setHint("Password");
-
-        // Change input type for employee ID
-        etEmployeeId.setInputType(android.text.InputType.TYPE_CLASS_TEXT);
+        btnLogin = findViewById(R.id.btnLogin);
     }
 
     private void setupClickListeners() {
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginEmployee();
-            }
-        });
-
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToRegistration();
+                loginAdmin();
             }
         });
     }
 
-    private void loginEmployee() {
-        String employeeId = etEmployeeId.getText().toString().trim();
+    private void loginAdmin() {
+        String adminId = etAdminId.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
         // Validation
-        if (employeeId.isEmpty()) {
-            etEmployeeId.setError("Please enter employee ID");
-            etEmployeeId.requestFocus();
+        if (adminId.isEmpty()) {
+            etAdminId.setError("Please enter admin ID");
+            etAdminId.requestFocus();
             return;
         }
 
@@ -88,27 +74,27 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Validate credentials using DatabaseHelper
-        boolean isValid = dbHelper.validateEmployeeLogin(employeeId, password);
+        boolean isValid = dbHelper.validateAdminLogin(adminId, password);
 
         if (isValid) {
-            showToast("Login successful!");
-            navigateToHome(employeeId);
+            showToast("Admin login successful!");
+            navigateToAdminHome(adminId);
         } else {
-            showToast("Invalid employee ID or password");
+            showToast("Invalid admin ID or password");
             etPassword.setText(""); // Clear password field
             etPassword.requestFocus();
         }
     }
 
-    private void navigateToRegistration() {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+    private void navigateToLanding() {
+        Intent intent = new Intent(LoginAdminActivity.this, LandingActivity.class);
         startActivity(intent);
         finish();
     }
 
-    private void navigateToHome(String employeeId) {
-        Intent intent = new Intent(LoginActivity.this, HomeEmployeeActivity.class);
-        intent.putExtra("EMPLOYEE_ID", employeeId);
+    private void navigateToAdminHome(String adminId) {
+        Intent intent = new Intent(LoginAdminActivity.this, HomeAdminActivity.class);
+        intent.putExtra("ADMIN_ID", adminId);
         startActivity(intent);
         finish();
     }
