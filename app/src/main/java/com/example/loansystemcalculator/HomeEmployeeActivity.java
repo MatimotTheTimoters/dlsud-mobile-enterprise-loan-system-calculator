@@ -78,17 +78,17 @@ public class HomeEmployeeActivity extends AppCompatActivity {
         tvEmployeeId.setText("Employee ID: " + employeeId);
     }
 
-    private void navigateToLoanApplicationForm() {
-        Intent intent = new Intent(HomeEmployeeActivity.this, EmployeeLoanApplicationFormActivity.class);
-        intent.putExtra("EMPLOYEE_ID", employeeId);
-        startActivity(intent);
-    }
-
-    private void navigateToLoanApplicationsHistory() {
-        Intent intent = new Intent(HomeEmployeeActivity.this, EmployeeLoanApplicationsHistoryActivity.class);
-        intent.putExtra("EMPLOYEE_ID", employeeId);
-        startActivity(intent);
-    }
+//    private void navigateToLoanApplicationForm() {
+//        Intent intent = new Intent(HomeEmployeeActivity.this, EmployeeLoanApplicationFormActivity.class);
+//        intent.putExtra("EMPLOYEE_ID", employeeId);
+//        startActivity(intent);
+//    }
+//
+//    private void navigateToLoanApplicationsHistory() {
+//        Intent intent = new Intent(HomeEmployeeActivity.this, EmployeeLoanApplicationsHistoryActivity.class);
+//        intent.putExtra("EMPLOYEE_ID", employeeId);
+//        startActivity(intent);
+//    }
 
     private void navigateToEmployeeLogin() {
         Intent intent = new Intent(HomeEmployeeActivity.this, LoginActivity.class);
