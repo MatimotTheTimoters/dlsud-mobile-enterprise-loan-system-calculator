@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoanSystemCalculator">
         <activity
+            android:name=".HomeAdminActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginAdminActivity"
             android:exported="false" />
         <activity
