@@ -1,135 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_brown"
+    android:background="@drawable/gradient_bg"
     tools:context=".LoginAdminActivity">
-
-    <!-- Wave Top -->
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:scaleY="-1"
-        app:srcCompat="@drawable/wave_top" />
 
     <!-- App Name - unBEARable -->
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/righteous"
         android:text="unBEARable"
+        android:textColor="@color/dark_brown"
+        android:textSize="110px"
+        android:fontFamily="@font/righteous"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/textViewLoans"
+        app:layout_constraintVertical_chainStyle="packed"/>
 
     <!-- Loans Text -->
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textViewLoans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView6"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/righteous"
         android:text="Loans"
+        android:textColor="@color/dark_brown"
+        android:textSize="80px"
+        android:fontFamily="@font/righteous"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
-
-    <!-- Logo -->
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_below="@id/textView5"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/rounded_image"
-        android:clipToOutline="true"
-        app:srcCompat="@drawable/logo2" />
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Admin Login Text -->
     <TextView
         android:id="@+id/textViewAdminLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageView3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/righteous"
         android:text="Admin Login"
+        android:textColor="@color/dark_brown"
+        android:textSize="50px"
+        android:fontFamily="@font/righteous"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
+        app:layout_constraintTop_toBottomOf="@id/textViewLoans"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
 
-    <!-- Admin ID Input -->
-    <EditText
-        android:id="@+id/etAdminId"
-        android:layout_width="match_parent"
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="220dp"
+        android:layout_height="200dp"
+        android:background="@drawable/rounded_image"
+        android:clipToOutline="true"
+        android:src="@drawable/logo2"
+        app:layout_constraintTop_toBottomOf="@id/textViewAdminLogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- CardView wrapping the admin login form -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewAdminLogin"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textViewAdminLogin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/rounded_edittext"
-        android:fontFamily="@font/poppins"
-        android:hint="Admin ID"
-        android:inputType="text"
-        android:padding="16dp"
-        android:textColor="#333333"
-        android:textColorHint="#999999"
-        android:textSize="16sp" />
+        android:layout_margin="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
+        app:layout_constraintTop_toBottomOf="@id/imageViewLogo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Password Input -->
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/etAdminId"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/rounded_edittext"
-        android:fontFamily="@font/poppins"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:padding="16dp"
-        android:textColor="#333333"
-        android:textColorHint="#999999"
-        android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <!-- Login Button -->
+            <EditText
+                android:id="@+id/etAdminId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Admin ID"
+                android:background="@drawable/rounded_edittext"
+                android:padding="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins"/>
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:hint="Password"
+                android:background="@drawable/rounded_edittext"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Buttons -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
-        android:layout_width="200dp"
-        android:layout_height="55dp"
-        android:layout_below="@id/etPassword"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/button_register2"
-        android:fontFamily="@font/poppins"
-        android:text="Login"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:backgroundTint="@null" />
-
-    <!-- Wave Bottom -->
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:srcCompat="@drawable/wave_bottom" />
+        android:text="Login"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppins"
+        app:layout_constraintTop_toBottomOf="@id/cardViewAdminLogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnRegister"
+        app:layout_constraintWidth_percent="0.45"
+        android:layout_margin="8dp"
+        app:backgroundTint="@color/brown_dark"
+        android:textColor="@android:color/white"/>
 
-</RelativeLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/poppins"
+        app:layout_constraintTop_toBottomOf="@id/cardViewAdminLogin"
+        app:layout_constraintStart_toEndOf="@id/btnLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.45"
+        android:layout_margin="8dp"
+        app:backgroundTint="@color/brown_dark"
+        android:textColor="@android:color/white"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
