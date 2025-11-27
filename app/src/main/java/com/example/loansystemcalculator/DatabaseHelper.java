@@ -37,6 +37,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ADMIN_ID = "adminId";
     private static final String COLUMN_ADMIN_PASSWORD_HASH = "passwordHash";
 
+    // LoanType table fields
+    private static final String TABLE_LOAN_TYPE = "LoanType";
+    private static final String COLUMN_LOAN_TYPE_ID = "loanTypeId";
+    private static final String COLUMN_TYPE_NAME = "typeName";
+    private static final String COLUMN_MIN_AMOUNT = "minAmount";
+    private static final String COLUMN_MAX_AMOUNT = "maxAmount";
+    private static final String COLUMN_SERVICE_CHARGE_RATE = "serviceChargeRate";
+
+    // InterestRate table fields
+    private static final String TABLE_INTEREST_RATE = "InterestRate";
+    private static final String COLUMN_RATE_ID = "rateId";
+    private static final String COLUMN_MIN_MONTHS = "minMonths";
+    private static final String COLUMN_MAX_MONTHS = "maxMonths";
+    private static final String COLUMN_INTEREST_RATE = "interestRate";
+
+    // LoanApplication table fields
+    private static final String TABLE_LOAN_APPLICATION = "LoanApplication";
+    private static final String COLUMN_LOAN_ID = "loanId";
+    private static final String COLUMN_REQUESTED_AMOUNT = "requestedAmount";
+    private static final String COLUMN_MONTHS_TO_PAY = "monthsToPay";
+    private static final String COLUMN_STATUS = "status";
+    private static final String COLUMN_INTEREST_RATE_APPLIED = "interestRateApplied";
+    private static final String COLUMN_INTEREST_AMOUNT = "interestAmount";
+    private static final String COLUMN_SERVICE_CHARGE_AMOUNT = "serviceChargeAmount";
+    private static final String COLUMN_TAKE_HOME_LOAN = "takeHomeLoan";
+    private static final String COLUMN_TOTAL_AMOUNT_DUE = "totalAmountDue";
+    private static final String COLUMN_PROCESSED_BY_ADMIN_ID = "processedByAdminId";
+    private static final String COLUMN_APPLICATION_DATE = "applicationDate";
+
     // Create Employee table
     private static final String CREATE_EMPLOYEE_TABLE = "CREATE TABLE " + TABLE_EMPLOYEE + "("
             + COLUMN_EMPLOYEE_ID + " VARCHAR(15) PRIMARY KEY,"
