@@ -177,7 +177,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // Register employee
     // Register employee with auto-generated ID
     public boolean registerEmployee(String firstName, String middleInitial,
                                     String lastName, String dateHired, String password, double basicSalary) {
@@ -348,5 +347,176 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return db.query(TABLE_EMPLOYEE, columns, null, null, null, null,
                 COLUMN_EMPLOYEE_LAST_NAME + ", " + COLUMN_EMPLOYEE_FIRST_NAME);
+    }
+
+    /**----------
+     Loan Methods
+     ----------**/
+
+    // Insert loan types method (Emergency, Special, Regular)
+    private void insertDefaultLoanData(SQLiteDatabase db) {
+        // Insert loan types
+        ContentValues emergency = new ContentValues();
+        emergency.put(COLUMN_TYPE_NAME, "Emergency");
+        emergency.put(COLUMN_MIN_AMOUNT, 5000.00);
+        emergency.put(COLUMN_MAX_AMOUNT, 25000.00);
+        emergency.put(COLUMN_SERVICE_CHARGE_RATE, 0.01);
+        db.insert(TABLE_LOAN_TYPE, null, emergency);
+
+        ContentValues special = new ContentValues();
+        special.put(COLUMN_TYPE_NAME, "Special");
+        special.put(COLUMN_MIN_AMOUNT, 50000.00);
+        special.put(COLUMN_MAX_AMOUNT, 100000.00);
+        special.put(COLUMN_SERVICE_CHARGE_RATE, 0.00);
+        db.insert(TABLE_LOAN_TYPE, null, special);
+
+        ContentValues regular = new ContentValues();
+        regular.put(COLUMN_TYPE_NAME, "Regular");
+        regular.putNull(COLUMN_MIN_AMOUNT);
+        regular.putNull(COLUMN_MAX_AMOUNT);
+        regular.put(COLUMN_SERVICE_CHARGE_RATE, 0.02);
+        db.insert(TABLE_LOAN_TYPE, null, regular);
+
+        // Insert interest rates for Emergency (only 6 months)
+        ContentValues emergencyRate = new ContentValues();
+        emergencyRate.put(COLUMN_LOAN_TYPE_ID, 1);
+        emergencyRate.put(COLUMN_MIN_MONTHS, 6);
+        emergencyRate.put(COLUMN_MAX_MONTHS, 6);
+        emergencyRate.put(COLUMN_INTEREST_RATE, 0.0060);
+        db.insert(TABLE_INTEREST_RATE, null, emergencyRate);
+
+        // Insert interest rates for Special
+        String[] specialRates = {"1,6,0.0060", "7,12,0.0062", "13,18,0.0065"};
+        for (String rate : specialRates) {
+            String[] parts = rate.split(",");
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_LOAN_TYPE_ID, 2);
+            values.put(COLUMN_MIN_MONTHS, Integer.parseInt(parts[0]));
+            values.put(COLUMN_MAX_MONTHS, Integer.parseInt(parts[1]));
+            values.put(COLUMN_INTEREST_RATE, Double.parseDouble(parts[2]));
+            db.insert(TABLE_INTEREST_RATE, null, values);
+        }
+
+        // Insert interest rates for Regular
+        String[] regularRates = {"1,5,0.0062", "6,10,0.0065", "11,15,0.0068", "16,20,0.0075", "21,24,0.0080"};
+        for (String rate : regularRates) {
+            String[] parts = rate.split(",");
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_LOAN_TYPE_ID, 3);
+            values.put(COLUMN_MIN_MONTHS, Integer.parseInt(parts[0]));
+            values.put(COLUMN_MAX_MONTHS, Integer.parseInt(parts[1]));
+            values.put(COLUMN_INTEREST_RATE, Double.parseDouble(parts[2]));
+            db.insert(TABLE_INTEREST_RATE, null, values);
+        }
+    }
+
+    // Create loan application
+    public boolean applyForLoan(String employeeId, int loanTypeId, double requestedAmount,
+                                int monthsToPay, double totalAmountDue, double interestRateApplied,
+                                double interestAmount, double serviceChargeAmount, double takeHomeLoan) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_EMPLOYEE_ID, employeeId);
+        values.put(COLUMN_LOAN_TYPE_ID, loanTypeId);
+        values.put(COLUMN_REQUESTED_AMOUNT, requestedAmount);
+        values.put(COLUMN_MONTHS_TO_PAY, monthsToPay);
+        values.put(COLUMN_STATUS, "Pending");
+        values.put(COLUMN_INTEREST_RATE_APPLIED, interestRateApplied);
+        values.put(COLUMN_INTEREST_AMOUNT, interestAmount);
+        values.put(COLUMN_SERVICE_CHARGE_AMOUNT, serviceChargeAmount);
+        values.put(COLUMN_TAKE_HOME_LOAN, takeHomeLoan);
+        values.put(COLUMN_TOTAL_AMOUNT_DUE, totalAmountDue);
+
+        long result = db.insert(TABLE_LOAN_APPLICATION, null, values);
+        return result != -1;
+    }
+
+    // Process loan as approved or denied
+    public boolean updateLoanStatus(int loanId, String status, String adminId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_STATUS, status);
+        values.put(COLUMN_PROCESSED_BY_ADMIN_ID, adminId);
+
+        String whereClause = COLUMN_LOAN_ID + " = ?";
+        String[] whereArgs = {String.valueOf(loanId)};
+
+        int result = db.update(TABLE_LOAN_APPLICATION, values, whereClause, whereArgs);
+        return result > 0;
+    }
+
+    // Getters
+    public double getInterestRate(int loanTypeId, int monthsToPay) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_INTEREST_RATE};
+        String selection = COLUMN_LOAN_TYPE_ID + " = ? AND " + COLUMN_MIN_MONTHS + " <= ? AND " + COLUMN_MAX_MONTHS + " >= ?";
+        String[] selectionArgs = {String.valueOf(loanTypeId), String.valueOf(monthsToPay), String.valueOf(monthsToPay)};
+
+        Cursor cursor = db.query(TABLE_INTEREST_RATE, columns, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            double rate = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_INTEREST_RATE));
+            cursor.close();
+            return rate;
+        }
+        cursor.close();
+        return 0.0;
+    }
+
+    public Cursor getAllLoanApplications() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT la." + COLUMN_LOAN_ID + ", " +
+                "e." + COLUMN_EMPLOYEE_FIRST_NAME + " || ' ' || e." + COLUMN_EMPLOYEE_LAST_NAME + " as employeeName, " +
+                "lt." + COLUMN_TYPE_NAME + " as loanType, " +
+                "la." + COLUMN_REQUESTED_AMOUNT + ", " +
+                "la." + COLUMN_STATUS + ", " +
+                "la." + COLUMN_APPLICATION_DATE + " " +
+                "FROM " + TABLE_LOAN_APPLICATION + " la " +
+                "INNER JOIN " + TABLE_EMPLOYEE + " e ON la." + COLUMN_EMPLOYEE_ID + " = e." + COLUMN_EMPLOYEE_ID + " " +
+                "INNER JOIN " + TABLE_LOAN_TYPE + " lt ON la." + COLUMN_LOAN_TYPE_ID + " = lt." + COLUMN_LOAN_TYPE_ID + " " +
+                "ORDER BY la." + COLUMN_APPLICATION_DATE + " DESC";
+
+        return db.rawQuery(query, null);
+    }
+
+    public Cursor getPendingLoanApplications() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT la.*, " +
+                "e." + COLUMN_EMPLOYEE_FIRST_NAME + " || ' ' || e." + COLUMN_EMPLOYEE_LAST_NAME + " as employeeName, " +
+                "lt." + COLUMN_TYPE_NAME + " as loanTypeName " +
+                "FROM " + TABLE_LOAN_APPLICATION + " la " +
+                "INNER JOIN " + TABLE_EMPLOYEE + " e ON la." + COLUMN_EMPLOYEE_ID + " = e." + COLUMN_EMPLOYEE_ID + " " +
+                "INNER JOIN " + TABLE_LOAN_TYPE + " lt ON la." + COLUMN_LOAN_TYPE_ID + " = lt." + COLUMN_LOAN_TYPE_ID + " " +
+                "WHERE la." + COLUMN_STATUS + " = 'Pending' " +
+                "ORDER BY la." + COLUMN_APPLICATION_DATE + " ASC";
+
+        return db.rawQuery(query, null);
+    }
+
+    public Cursor getApprovedLoanApplications() {
+        return getLoanApplicationsByStatus("Approved");
+    }
+
+    public Cursor getDeniedLoanApplications() {
+        return getLoanApplicationsByStatus("Denied");
+    }
+
+    private Cursor getLoanApplicationsByStatus(String status) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT la." + COLUMN_LOAN_ID + ", " +
+                "e." + COLUMN_EMPLOYEE_FIRST_NAME + " || ' ' || e." + COLUMN_EMPLOYEE_LAST_NAME + " as employeeName, " +
+                "lt." + COLUMN_TYPE_NAME + " as loanType, " +
+                "la." + COLUMN_REQUESTED_AMOUNT + ", " +
+                "la." + COLUMN_STATUS + ", " +
+                "la." + COLUMN_APPLICATION_DATE + " " +
+                "FROM " + TABLE_LOAN_APPLICATION + " la " +
+                "INNER JOIN " + TABLE_EMPLOYEE + " e ON la." + COLUMN_EMPLOYEE_ID + " = e." + COLUMN_EMPLOYEE_ID + " " +
+                "INNER JOIN " + TABLE_LOAN_TYPE + " lt ON la." + COLUMN_LOAN_TYPE_ID + " = lt." + COLUMN_LOAN_TYPE_ID + " " +
+                "WHERE la." + COLUMN_STATUS + " = ? " +
+                "ORDER BY la." + COLUMN_APPLICATION_DATE + " DESC";
+
+        return db.rawQuery(query, new String[]{status});
     }
 }
