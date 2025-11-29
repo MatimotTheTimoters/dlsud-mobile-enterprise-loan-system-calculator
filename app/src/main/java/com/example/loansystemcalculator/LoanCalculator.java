@@ -21,7 +21,7 @@ public class LoanCalculator {
      * - Payable in 6 months: (Loan Amount + Service Charge + Interest) / number of months to pay
      * Returns total amount due for emergency loan
      */
-    public static double computeEmergencyLoan(String method, double loanAmount, double serviceCharge, double interest, int monthsToPay) {
+    public static double computeEmergencyLoan(double loanAmount, double serviceCharge, double interest, int monthsToPay) {
         return loanAmount + serviceCharge + interest;
     }
 
