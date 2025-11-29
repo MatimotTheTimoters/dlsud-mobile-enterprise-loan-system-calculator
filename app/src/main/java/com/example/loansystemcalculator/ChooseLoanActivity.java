@@ -20,7 +20,7 @@ public class ChooseLoanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_choose_loan);
+        setContentView(R.layout.activity_choose_loan);
 
         employeeId = getIntent().getStringExtra("EMPLOYEE_ID");
 
