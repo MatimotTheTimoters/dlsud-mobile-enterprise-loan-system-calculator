@@ -12,13 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoanSystemCalculator">
         <activity
-            android:name=".RegularLoanActivity"
+            android:name=".LoanRegularActivity"
             android:exported="false" />
         <activity
-            android:name=".SpecialLoanActivity"
+            android:name=".LoanSpecialActivity"
             android:exported="false" />
         <activity
-            android:name=".EmergencyLoanActivity"
+            android:name=".LoanEmergencyActivity"
             android:exported="false" />
         <activity
             android:name=".LandingActivity"
@@ -45,7 +45,7 @@
             android:name=".HomeEmployeeActivity"
             android:exported="false" />
         <activity
-            android:name=".ChooseLoanActivity"
+            android:name=".LoanChooseTypeActivity"
             android:exported="false" />
     </application>
 

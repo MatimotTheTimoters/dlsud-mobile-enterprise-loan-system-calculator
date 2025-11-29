@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:background="@drawable/gradient_bg"
-    tools:context=".ChooseLoanActivity">
+    tools:context=".LoanChooseTypeActivity">
 
 
     <TextView

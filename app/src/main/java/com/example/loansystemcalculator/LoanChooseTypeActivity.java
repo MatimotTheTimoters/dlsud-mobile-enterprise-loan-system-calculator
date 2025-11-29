@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-public class ChooseLoanActivity extends AppCompatActivity {
+public class LoanChooseTypeActivity extends AppCompatActivity {
 
     private CardView cardEmergency, cardSpecial, cardRegular;
     private LinearLayout expandableEmergency, expandableSpecial, expandableRegular;
@@ -20,7 +20,7 @@ public class ChooseLoanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_loan);
+        setContentView(R.layout.activity_loan_choose_type);
 
         employeeId = getIntent().getStringExtra("EMPLOYEE_ID");
 

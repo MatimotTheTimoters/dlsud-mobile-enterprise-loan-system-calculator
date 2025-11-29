@@ -107,7 +107,7 @@ public class HomeEmployeeActivity extends AppCompatActivity {
 
 
     private void navigateToChooseLoan() {
-        Intent intent = new Intent(HomeEmployeeActivity.this, ChooseLoanActivity.class);
+        Intent intent = new Intent(HomeEmployeeActivity.this, LoanChooseTypeActivity.class);
         intent.putExtra("EMPLOYEE_ID", employeeId);
         startActivity(intent);
     }
