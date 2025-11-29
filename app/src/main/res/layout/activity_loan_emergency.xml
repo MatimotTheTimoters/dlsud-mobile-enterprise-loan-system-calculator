@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@id/main"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_bg"
     tools:context=".LoanEmergencyActivity">
@@ -34,6 +35,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/righteous"
+
             android:text="Emergency Loan"
             android:textAlignment="center"
             android:textColor="@color/dark_brown"
@@ -315,7 +317,9 @@
                 android:text="Calculate"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
+                app:backgroundTint="@color/brown_dark"
                 android:textSize="16sp" />
+
 
             <Button
                 android:id="@+id/btnApply"
@@ -328,6 +332,7 @@
                 android:text="Apply Now"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
+                app:backgroundTint="@color/brown_dark"
                 android:textSize="16sp" />
 
         </LinearLayout>
