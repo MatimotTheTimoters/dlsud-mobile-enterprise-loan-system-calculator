@@ -121,26 +121,30 @@ public class LoanRegularActivity extends AppCompatActivity {
                 return;
             }
 
-            // Determine selected months and get interest rate
+            // Determine selected months and corresponding interest rate
             if (selectedId == R.id.radio1to5) {
                 selectedMonths = 5;
+                currentInterestRate = 0.0062;
             } else if (selectedId == R.id.radio6to10) {
                 selectedMonths = 10;
+                currentInterestRate = 0.0065;
             } else if (selectedId == R.id.radio11to15) {
                 selectedMonths = 15;
+                currentInterestRate = 0.0068;
             } else if (selectedId == R.id.radio16to20) {
                 selectedMonths = 20;
+                currentInterestRate = 0.0075;
             } else if (selectedId == R.id.radio21to24) {
                 selectedMonths = 24;
+                currentInterestRate = 0.0080;
             }
-
-            // Get interest rate from database (Regular Loan has loanTypeId = 3)
-            currentInterestRate = dbHelper.getInterestRate(3, selectedMonths);
 
             if (currentInterestRate > 0) {
                 textViewSelectedMonths.setText("Selected: " + selectedMonths + " months");
-                textViewInterestRate.setText("Interest Rate: " + percentFormat.format(currentInterestRate));
-                Toast.makeText(this, "Selected: " + selectedMonths + " months", Toast.LENGTH_SHORT).show();
+                textViewInterestRate.setText("Interest Rate: " + percentFormat.format(currentInterestRate) + "%");
+                Toast.makeText(this, "Selected: " + selectedMonths + " months at " +
+                                percentFormat.format(currentInterestRate) + "% interest",
+                        Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
 
                 // Enable calculate button

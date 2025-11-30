@@ -1,33 +1,24 @@
 package com.example.loansystemcalculator;
 
-import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class HomeAdminActivity extends AppCompatActivity {
+public class AdminRecordsViewerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home_admin);
-
+        setContentView(R.layout.activity_admin_records_viewer);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        CardView cardViewTransactions = findViewById(R.id.cardViewTransactions);
-        cardViewTransactions.setOnClickListener(v -> {
-
-            Intent intent = new Intent(HomeAdminActivity.this, AdminProcessLoanActivity.class);
-            startActivity(intent);
-        });
-
     }
 }

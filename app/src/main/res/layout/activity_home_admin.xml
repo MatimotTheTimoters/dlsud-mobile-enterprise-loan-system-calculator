@@ -5,188 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_brown"
+    android:background="@drawable/gradient_bg"
     tools:context=".HomeAdminActivity">
 
-    <!-- Wave Top -->
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:scaleY="-1"
-        app:srcCompat="@drawable/wave_top" />
-
-    <!-- App Name - unBEARable -->
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/righteous"
-        android:text="unBEARable"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold" />
-
-    <!-- Loans Text -->
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView6"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/righteous"
-        android:text="Loans"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
-
-    <!-- Logo -->
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_below="@id/textView5"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/rounded_image"
-        android:clipToOutline="true"
-        app:srcCompat="@drawable/logo2" />
-
-    <!-- Welcome Admin Text -->
-    <TextView
-        android:id="@+id/tvWelcomeAdmin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/imageView3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/righteous"
-        android:text="Welcome, Admin!"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
-
-    <!-- Admin ID Display -->
-    <TextView
-        android:id="@+id/tvAdminId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvWelcomeAdmin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/poppins"
-        android:text="Admin ID: "
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-    <!-- Grid Layout for Navigation Cards -->
-    <GridLayout
-        android:id="@+id/gridLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvAdminId"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        app:columnCount="2"
-        app:rowCount="2">
-
-        <!-- Process Loans Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/brown_shadow_light"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="8dp"
-            app:layout_columnWeight="1"
-            app:layout_rowWeight="1"
-            app:layout_gravity="fill">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp">
-
-                <ImageView
-                    android:id="@+id/iconProcessLoans"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    app:srcCompat="@drawable/ic_loan_processing"
-                    android:tint="@color/white" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/iconProcessLoans"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="12dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="PROCESS\nLOANS"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-            </RelativeLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- View Records Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardBackgroundColor="@color/brown_shadow_light"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="8dp"
-            app:layout_columnWeight="1"
-            app:layout_rowWeight="1"
-            app:layout_gravity="fill">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp">
-
-                <ImageView
-                    android:id="@+id/iconViewRecords"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    app:srcCompat="@drawable/ic_records"
-                    android:tint="@color/white" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/iconViewRecords"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="12dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="VIEW\nRECORDS"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-            </RelativeLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </GridLayout>
-
-    <!-- Logout Button at Top Right -->
+    <!-- Logout Button -->
     <ImageButton
         android:id="@+id/btnLogout"
         android:layout_width="48dp"
@@ -197,16 +19,296 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/rounded_logout_button"
         android:scaleType="center"
-        app:srcCompat="@drawable/ic_logout"
-        android:tint="@color/white"
-        android:contentDescription="Logout" />
+        app:srcCompat="@drawable/ic_logout" />
 
-    <!-- Wave Bottom -->
-    <ImageView
-        android:id="@+id/imageView4"
+    <!-- Scrollable Content -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:srcCompat="@drawable/wave_bottom" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnLogout"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- App Name -->
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/righteous"
+                android:text="unBEARable"
+                android:textColor="@color/dark_brown"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <!-- Loans Text -->
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView6"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-10dp"
+                android:fontFamily="@font/righteous"
+                android:text="Loans"
+                android:textColor="@color/dark_brown"
+                android:textSize="34sp" />
+
+            <!-- Logo -->
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_below="@id/textView5"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/rounded_image"
+                android:clipToOutline="true"
+                app:srcCompat="@drawable/adminbear" />
+
+            <!-- Welcome Admin Text -->
+            <TextView
+                android:id="@+id/tvWelcomeAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageView3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/righteous"
+                android:text="Welcome, Admin!"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <!-- Admin ID Display -->
+            <TextView
+                android:id="@+id/tvAdminId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvWelcomeAdmin"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/poppins"
+                android:text="Admin ID: "
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <!-- Grid Layout -->
+            <GridLayout
+                android:id="@+id/gridLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvAdminId"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:columnCount="2"
+                app:rowCount="1">
+
+                <!-- LinearLayout for Navigation Cards -->
+                <LinearLayout
+                    android:id="@+id/cardsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:weightSum="2">
+
+                    <!-- View Loans-->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardViewTransactions"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/brown_shadow_light"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="8dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:id="@+id/iconApplyLoan"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:contentDescription="Apply for loan"
+                                app:srcCompat="@drawable/ic_apply_loan"
+                                app:tint="@color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/iconApplyLoan"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="16dp"
+                                android:fontFamily="@font/poppins"
+                                android:text="VIEW\nLOANS"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Transaction History Card -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardTransactionHistory"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="8dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="@color/brown_shadow_light"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="8dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:id="@+id/iconTransactionHistory"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:contentDescription="Transaction history"
+                                app:srcCompat="@drawable/ic_users"
+                                app:tint="@color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/iconTransactionHistory"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="16dp"
+                                android:fontFamily="@font/poppins"
+                                android:text="VIEW\nRECORDS"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <!-- 1st Card process loans -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardProcessLoans"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@color/brown_shadow_light"
+                    app:layout_columnWeight="1"
+                    app:layout_rowWeight="1"
+                    app:layout_gravity="fill">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:id="@+id/iconProcessLoans"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            app:srcCompat="@drawable/ic_loan_processing" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/iconProcessLoans"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="12dp"
+                            android:text="PROCESS\nLOANS"
+                            android:fontFamily="@font/poppins"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- 2nd card - view records -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewRecords"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    app:cardBackgroundColor="@color/brown_shadow_light"
+                    app:layout_columnWeight="1"
+                    app:layout_rowWeight="1"
+                    app:layout_gravity="fill">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:id="@+id/iconViewRecords"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="16dp"
+                            app:srcCompat="@drawable/ic_records" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/iconViewRecords"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="12dp"
+                            android:text="VIEW\nRECORDS"
+                            android:fontFamily="@font/poppins"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+            </GridLayout>
+
+        </RelativeLayout>
+
+
+
+    </ScrollView>
+
+
+
+
+
+
+
+
 
 </RelativeLayout>
