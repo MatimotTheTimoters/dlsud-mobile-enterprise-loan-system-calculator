@@ -151,17 +151,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_INTEREST_RATE_TABLE);
         db.execSQL(CREATE_LOAN_APPLICATION_TABLE);
 
-        // Insert default admin account
         insertDefaultAdmin(db);
+        insertDefaultLoanData(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
-            // Create Admin table for version 2
+            // Create Admin table
             db.execSQL(CREATE_ADMIN_TABLE);
+
             // Insert default admin account
             insertDefaultAdmin(db);
+
+            // Initialize loan data when upgrading
+            insertDefaultLoanData(db);
         }
     }
 
@@ -554,5 +558,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "ORDER BY la." + COLUMN_APPLICATION_DATE + " DESC";
 
         return db.rawQuery(query, new String[]{status});
+    }
+
+    /**
+     * ----------
+     * Public method to initialize loan data if needed
+     * ----------
+     **/
+
+// Check if loan types are initialized, and initialize if not
+    public void initializeLoanDataIfNeeded() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Check if LoanType table has any data
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_LOAN_TYPE, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int count = cursor.getInt(0);
+            cursor.close();
+
+            if (count == 0) {
+                // Loan types not initialized, insert them
+                SQLiteDatabase writableDb = this.getWritableDatabase();
+                insertDefaultLoanData(writableDb);
+            }
+        }
+    }
+
+    // Add this helper method to get loan type ID by name
+    public int getLoanTypeIdByName(String typeName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {COLUMN_LOAN_TYPE_ID};
+        String selection = COLUMN_TYPE_NAME + " = ?";
+        String[] selectionArgs = {typeName};
+
+        Cursor cursor = db.query(TABLE_LOAN_TYPE, columns, selection, selectionArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_LOAN_TYPE_ID));
+            cursor.close();
+            return id;
+        }
+        cursor.close();
+        return -1; // Not found
     }
 }

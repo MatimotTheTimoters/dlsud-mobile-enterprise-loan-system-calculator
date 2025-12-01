@@ -26,6 +26,9 @@ public class LandingActivity extends AppCompatActivity {
             return insets;
         });
 
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        dbHelper.initializeLoanDataIfNeeded();
+
         initializeViews();
         setupClickListeners();
     }
