@@ -12,7 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoanSystemCalculator">
         <activity
-            android:name=".AdminRecordsViewerActivity"
+            android:name=".AdminLoanViewerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminEmployeeViewerActivity"
             android:exported="false" />
         <activity
             android:name=".AdminProcessLoanActivity"
