@@ -10,13 +10,39 @@ import androidx.core.view.WindowInsetsCompat;
 import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText etEmployeeId, etPassword;
     private MaterialButton btnSignIn, btnRegister;
     private DatabaseHelper dbHelper;
+
+    // Mascot animation variables
+    private ImageView mascotImage;
+    private TextView textViewEmployeeCounter, textViewPasswordCounter;
+    private boolean isPasswordFocused = false;
+
+    // Username mascot images (0-7 characters)
+    private int[] usernameImages = {
+            R.drawable.mascot_0,
+            R.drawable.mascot_1,
+            R.drawable.mascot_2,
+            R.drawable.mascot_3,
+            R.drawable.mascot_4,
+            R.drawable.mascot_5,
+            R.drawable.mascot_6,
+            R.drawable.mascot_7
+    };
+
+    // Password mascot images
+    private int[] passwordImages = {
+            R.drawable.mascot_password_0
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
         initializeViews();
+        setupMascotAnimation();
         setupClickListeners();
     }
 
@@ -40,12 +67,123 @@ public class LoginActivity extends AppCompatActivity {
         btnSignIn = findViewById(R.id.btnSignIn);
         btnRegister = findViewById(R.id.btnRegister);
 
+        // Initialize mascot views
+        mascotImage = findViewById(R.id.mascotImage);
+        textViewEmployeeCounter = findViewById(R.id.textViewEmployeeCounter);
+        textViewPasswordCounter = findViewById(R.id.textViewPasswordCounter);
+
         // Change hints to match employee login
         etEmployeeId.setHint("Employee ID");
         etPassword.setHint("Password");
 
         // Change input type for employee ID
         etEmployeeId.setInputType(android.text.InputType.TYPE_CLASS_TEXT);
+    }
+
+    private void setupMascotAnimation() {
+        // Employee ID text watcher
+        etEmployeeId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int length = s.length();
+
+                // Update counter if it exists
+                if (textViewEmployeeCounter != null) {
+                    textViewEmployeeCounter.setText(length + "/20");
+                }
+
+                // Update mascot image if not password focused
+                if (!isPasswordFocused) {
+                    updateMascotImage(length, false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Password text watcher
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int length = s.length();
+
+                // Update counter if it exists
+                if (textViewPasswordCounter != null) {
+                    textViewPasswordCounter.setText(length + "/20");
+                }
+
+                // Update mascot image if password focused
+                if (isPasswordFocused) {
+                    updateMascotImage(length, true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Employee ID focus listener
+        etEmployeeId.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                isPasswordFocused = false;
+                updateMascotImage(etEmployeeId.getText().length(), false);
+            } else if (!etPassword.hasFocus()) {
+                if (mascotImage != null && usernameImages.length > 0) {
+                    mascotImage.setImageResource(usernameImages[0]);
+                }
+            }
+        });
+
+        // Password focus listener
+        etPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                isPasswordFocused = true;
+                updateMascotImage(etPassword.getText().length(), true);
+            } else if (!etEmployeeId.hasFocus()) {
+                if (mascotImage != null && usernameImages.length > 0) {
+                    mascotImage.setImageResource(usernameImages[0]);
+                }
+            } else {
+                isPasswordFocused = false;
+                updateMascotImage(etEmployeeId.getText().length(), false);
+            }
+        });
+    }
+
+    // UPDATED METHOD: Changes image every 3 characters
+    private void updateMascotImage(int characterCount, boolean isPassword) {
+        if (mascotImage == null) return;
+
+        // Select appropriate image array
+        int[] imagesToUse = isPassword ? passwordImages : usernameImages;
+
+        // Safety check: Make sure array is not empty
+        if (imagesToUse.length == 0) return;
+
+        // CHANGED: Divide character count by 3 to change image every 3 characters
+        // 0-2 chars = image 0
+        // 3-5 chars = image 1
+        // 6-8 chars = image 2
+        // 9-11 chars = image 3, etc.
+        int imageIndex = characterCount / 3;
+
+        // Make sure we don't exceed array bounds
+        imageIndex = Math.min(imageIndex, imagesToUse.length - 1);
+
+        // Change the image safely
+        try {
+            mascotImage.setImageResource(imagesToUse[imageIndex]);
+        } catch (Exception e) {
+            // Fallback to first image if something goes wrong
+            mascotImage.setImageResource(imagesToUse[0]);
+        }
     }
 
     private void setupClickListeners() {
