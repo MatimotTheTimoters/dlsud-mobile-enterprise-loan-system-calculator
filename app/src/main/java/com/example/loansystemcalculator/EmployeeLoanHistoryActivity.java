@@ -1,14 +1,9 @@
 package com.example.loansystemcalculator;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -36,6 +38,7 @@ public class EmployeeLoanHistoryActivity extends AppCompatActivity {
 
     private DecimalFormat currencyFormat = new DecimalFormat("₱#,##0.00");
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+    private Typeface poppinsTypeface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,14 @@ public class EmployeeLoanHistoryActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Initialize typeface safely
+        try {
+            poppinsTypeface = ResourcesCompat.getFont(this, R.font.poppins);
+        } catch (Exception e) {
+            // Fallback to default font if custom font fails
+            poppinsTypeface = Typeface.DEFAULT;
+        }
 
         initializeViews();
         setupClickListeners();
@@ -133,7 +144,7 @@ public class EmployeeLoanHistoryActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
         tableRow.setOrientation(LinearLayout.HORIZONTAL);
-        tableRow.setPadding(12, 12, 12, 12);
+        tableRow.setPadding(dpToPx(12), dpToPx(12), dpToPx(12), dpToPx(12));
 
         // Alternate row colors for better readability
         if (rowNumber % 2 == 0) {
@@ -171,11 +182,16 @@ public class EmployeeLoanHistoryActivity extends AppCompatActivity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0, ViewGroup.LayoutParams.WRAP_CONTENT, weight
         );
-        params.setMargins(2, 0, 2, 0);
+        params.setMargins(dpToPx(2), 0, dpToPx(2), 0);
         textView.setLayoutParams(params);
         textView.setText(text);
         textView.setTextSize(12);
-        textView.setTypeface(getResources().getFont(R.font.poppins));
+
+        // Use the safely initialized typeface
+        if (poppinsTypeface != null) {
+            textView.setTypeface(poppinsTypeface);
+        }
+
         textView.setTextColor(Color.BLACK);
         textView.setGravity(gravity);
         textView.setSingleLine(true);
@@ -208,10 +224,14 @@ public class EmployeeLoanHistoryActivity extends AppCompatActivity {
 
         statusView.setTextColor(textColor);
         statusView.setBackgroundColor(bgColor);
-        statusView.setPadding(8, 4, 8, 4);
+        statusView.setPadding(dpToPx(8), dpToPx(4), dpToPx(8), dpToPx(4));
 
-        // Add rounded corners
-        statusView.setBackground(getResources().getDrawable(R.drawable.status_border));
+        // Optional: Add rounded corners if you have a status_border drawable
+        try {
+            statusView.setBackground(getResources().getDrawable(R.drawable.status_border));
+        } catch (Exception e) {
+            // If drawable doesn't exist, just use the background color
+        }
     }
 
     private String formatDate(String dateString) {
@@ -235,6 +255,11 @@ public class EmployeeLoanHistoryActivity extends AppCompatActivity {
     private void showLoading(boolean show) {
         progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         loanHistoryContainer.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 
     @Override
