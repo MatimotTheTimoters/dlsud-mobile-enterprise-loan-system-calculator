@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -196,7 +197,15 @@ public class AdminProcessLoanActivity extends AppCompatActivity {
         textView.setLayoutParams(params);
         textView.setText(text);
         textView.setTextSize(12);
-        textView.setTypeface(getResources().getFont(R.font.poppins));
+
+        // FIXED: Use ResourcesCompat.getFont() for backward compatibility
+        try {
+            textView.setTypeface(ResourcesCompat.getFont(this, R.font.poppins));
+        } catch (Exception e) {
+            // Fallback to default typeface if font loading fails
+            e.printStackTrace();
+        }
+
         textView.setTextColor(Color.BLACK);
 
         if (alignEnd) {
