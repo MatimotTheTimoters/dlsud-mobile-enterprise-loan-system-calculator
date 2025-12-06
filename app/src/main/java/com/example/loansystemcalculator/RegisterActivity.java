@@ -161,8 +161,12 @@ public class RegisterActivity extends AppCompatActivity {
             middleInitial = null;
         }
 
-        // Register employee using DatabaseHelper (auto-generates employee ID)
-        boolean success = dbHelper.registerEmployee(
+        // Generate employee ID BEFORE registration
+        String generatedEmployeeId = dbHelper.generateEmployeeId(middleInitial);
+
+        // Register employee using the generated employee ID
+        boolean success = dbHelper.registerEmployeeWithId(
+                generatedEmployeeId,
                 firstName,
                 middleInitial,
                 lastName,
@@ -172,12 +176,10 @@ public class RegisterActivity extends AppCompatActivity {
         );
 
         if (success) {
-            // Generate the same employee ID to display to user
-            String generatedEmployeeId = dbHelper.generateEmployeeId(firstName, lastName, middleInitial);
             showToast("Registration successful! Your Employee ID: " + generatedEmployeeId);
             navigateToHome(generatedEmployeeId);
         } else {
-            showToast("Registration failed. Please try again.");
+            showToast("Registration failed. Employee ID might already exist. Please try again.");
         }
     }
 
