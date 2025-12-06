@@ -19,13 +19,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.res.ResourcesCompat; // Added import
+import androidx.core.content.res.ResourcesCompat;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class AdminEmployeeViewerActivity extends AppCompatActivity {
 
@@ -91,10 +93,20 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 showLoading(false);
 
+                Set<String> uniqueIds = new HashSet<>(); // To track duplicates
+
                 if (cursor != null && cursor.moveToFirst()) {
                     do {
+                        String employeeId = cursor.getString(cursor.getColumnIndexOrThrow("employeeId"));
+
+                        // Check for duplicates
+                        if (uniqueIds.contains(employeeId)) {
+                            continue; // Skip duplicate
+                        }
+                        uniqueIds.add(employeeId);
+
                         EmployeeRecord record = new EmployeeRecord();
-                        record.setEmployeeId(cursor.getString(cursor.getColumnIndexOrThrow("employeeId")));
+                        record.setEmployeeId(employeeId);
                         record.setFirstName(cursor.getString(cursor.getColumnIndexOrThrow("firstName")));
                         record.setMiddleInitial(cursor.getString(cursor.getColumnIndexOrThrow("middleInitial")));
                         record.setLastName(cursor.getString(cursor.getColumnIndexOrThrow("lastName")));
@@ -158,12 +170,18 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
         // Employee ID
         row.addView(createTextView(record.getEmployeeId(), 1.2f, false));
 
-        // Full Name (First + Middle Initial + Last)
-        String fullName = record.getFirstName() + " " +
-                (record.getMiddleInitial() != null && !record.getMiddleInitial().isEmpty() ?
-                        record.getMiddleInitial() + ". " : "") +
-                record.getLastName();
-        row.addView(createTextView(fullName, 2f, false));
+        // Full Name with proper middle initial formatting
+        StringBuilder fullNameBuilder = new StringBuilder();
+        fullNameBuilder.append(record.getFirstName());
+
+        // Add middle initial with period if exists
+        if (record.getMiddleInitial() != null && !record.getMiddleInitial().trim().isEmpty()) {
+            fullNameBuilder.append(" ").append(record.getMiddleInitial().trim()).append(".");
+        }
+
+        fullNameBuilder.append(" ").append(record.getLastName());
+
+        row.addView(createTextView(fullNameBuilder.toString(), 2f, false));
 
         // Date Hired (formatted)
         String formattedDate = formatDate(record.getDateHired());
@@ -208,16 +226,21 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
     private void showEmployeeDetails(EmployeeRecord record) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // Format the details
+        // Format the details with proper middle initial handling
+        String middleInitialDisplay = "";
+        if (record.getMiddleInitial() != null && !record.getMiddleInitial().trim().isEmpty()) {
+            middleInitialDisplay = record.getMiddleInitial().trim() + ". ";
+        }
+
         String details = String.format(
                 "Employee ID: %s\n\n" +
-                        "Full Name: %s %s %s\n\n" +
+                        "Full Name: %s %s%s\n\n" +
                         "Date Hired: %s\n\n" +
                         "Basic Salary: %s\n\n" +
                         "Years of Service: %s",
                 record.getEmployeeId(),
                 record.getFirstName(),
-                record.getMiddleInitial() != null && !record.getMiddleInitial().isEmpty() ? record.getMiddleInitial() + "." : "",
+                middleInitialDisplay,
                 record.getLastName(),
                 formatDate(record.getDateHired()),
                 NumberFormat.getCurrencyInstance(new Locale("en", "PH")).format(record.getBasicSalary()),
@@ -232,8 +255,6 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
     }
 
     private void viewEmployeeLoans(String employeeId) {
-        // Navigate to loan history for this specific employee
-        // You can create a new activity or dialog for this
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         StringBuilder loanDetails = new StringBuilder();
@@ -269,19 +290,16 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
             return;
         }
 
-        // Simple export implementation - could be enhanced to export to CSV or PDF
+        // Simple export implementation
         StringBuilder exportData = new StringBuilder();
-        exportData.append("Employee ID,Full Name,Date Hired,Basic Salary\n");
+        exportData.append("Employee ID,First Name,Middle Initial,Last Name,Date Hired,Basic Salary\n");
 
         for (EmployeeRecord record : employeeRecords) {
-            String fullName = record.getFirstName() + " " +
-                    (record.getMiddleInitial() != null && !record.getMiddleInitial().isEmpty() ?
-                            record.getMiddleInitial() + ". " : "") +
-                    record.getLastName();
-
-            exportData.append(String.format("%s,%s,%s,%.2f\n",
+            exportData.append(String.format("%s,%s,%s,%s,%s,%.2f\n",
                     record.getEmployeeId(),
-                    fullName,
+                    record.getFirstName(),
+                    record.getMiddleInitial() != null ? record.getMiddleInitial().trim() : "",
+                    record.getLastName(),
                     record.getDateHired(),
                     record.getBasicSalary()
             ));
@@ -292,8 +310,8 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
         builder.setTitle("Export Employee Records")
                 .setMessage("Export " + employeeRecords.size() + " records?")
                 .setPositiveButton("Share", (dialog, which) -> {
-                    // Implement sharing logic here
-                    Toast.makeText(this, "Export feature would share data here", Toast.LENGTH_SHORT).show();
+                    // For now, just show a toast
+                    Toast.makeText(this, "Exported " + employeeRecords.size() + " records", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();

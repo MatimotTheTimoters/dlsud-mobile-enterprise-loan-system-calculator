@@ -232,7 +232,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Generate employee ID
-        String employeeId = generateEmployeeId(firstName, lastName, middleInitial);
+        String employeeId = generateEmployeeId(middleInitial);
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_EMPLOYEE_ID, employeeId);
