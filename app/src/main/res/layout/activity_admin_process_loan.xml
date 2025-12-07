@@ -299,12 +299,13 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonContainer"
         android:layout_centerHorizontal="true"
+        android:background="@drawable/button_apply_bg"
+        app:backgroundTint="@color/brown_dark"
+        android:textColor="@color/white"
         android:layout_marginBottom="16dp"
-        android:background="@android:color/transparent"
         android:fontFamily="@font/poppins"
         android:text="Back to Dashboard"
         android:textAllCaps="false"
-        android:textColor="@color/dark_brown"
         android:textSize="14sp" />
 
 </RelativeLayout>

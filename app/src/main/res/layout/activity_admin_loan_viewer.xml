@@ -217,11 +217,12 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/button_apply_bg"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/brown_dark"
         android:fontFamily="@font/poppins"
         android:text="Back to Dashboard"
         android:textAllCaps="false"
-        android:textColor="@color/dark_brown"
         android:textSize="14sp" />
 
     <!-- Loading Progress -->
