@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -24,10 +25,8 @@ import androidx.core.content.res.ResourcesCompat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 public class AdminEmployeeViewerActivity extends AppCompatActivity {
 
@@ -41,6 +40,7 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
     private String adminId;
 
     private List<EmployeeRecord> employeeRecords = new ArrayList<>();
+    private boolean isLoading = false; // Flag to prevent multiple loads
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,11 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
         }
 
         setupButtonListeners();
+
+        // Initialize UI first
+        updateInfoDisplay();
+
+        // Load records
         loadEmployeeRecords();
     }
 
@@ -84,48 +89,97 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
     }
 
     private void loadEmployeeRecords() {
+        // Prevent multiple simultaneous loads
+        if (isLoading) {
+            return;
+        }
+
+        isLoading = true;
         showLoading(true);
 
         new Thread(() -> {
+            // Clear the list on the background thread
             employeeRecords.clear();
-            Cursor cursor = dbHelper.getAllEmployees();
 
+            Cursor cursor = dbHelper.getAllEmployees();
+            List<EmployeeRecord> tempRecords = new ArrayList<>();
+
+            if (cursor != null) {
+                try {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            EmployeeRecord record = new EmployeeRecord();
+
+                            // Get employee ID
+                            int employeeIdIndex = cursor.getColumnIndex("employeeId");
+                            if (employeeIdIndex != -1) {
+                                record.setEmployeeId(cursor.getString(employeeIdIndex));
+                            }
+
+                            // Get first name
+                            int firstNameIndex = cursor.getColumnIndex("firstName");
+                            if (firstNameIndex != -1) {
+                                record.setFirstName(cursor.getString(firstNameIndex));
+                            }
+
+                            // Get middle initial (handle null/empty)
+                            int middleInitialIndex = cursor.getColumnIndex("middleInitial");
+                            if (middleInitialIndex != -1) {
+                                String middleInitial = cursor.getString(middleInitialIndex);
+                                // Check if it's null or empty
+                                record.setMiddleInitial(cursor.isNull(middleInitialIndex) ? "" : middleInitial);
+                            } else {
+                                record.setMiddleInitial("");
+                            }
+
+                            // Get last name
+                            int lastNameIndex = cursor.getColumnIndex("lastName");
+                            if (lastNameIndex != -1) {
+                                record.setLastName(cursor.getString(lastNameIndex));
+                            }
+
+                            // Get date hired
+                            int dateHiredIndex = cursor.getColumnIndex("dateHired");
+                            if (dateHiredIndex != -1) {
+                                record.setDateHired(cursor.getString(dateHiredIndex));
+                            }
+
+                            // Get basic salary
+                            int basicSalaryIndex = cursor.getColumnIndex("basicSalary");
+                            if (basicSalaryIndex != -1) {
+                                record.setBasicSalary(cursor.getDouble(basicSalaryIndex));
+                            }
+
+                            tempRecords.add(record);
+                        } while (cursor.moveToNext());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> Toast.makeText(AdminEmployeeViewerActivity.this,
+                            "Error loading employee records: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show());
+                } finally {
+                    cursor.close();
+                }
+            }
+
+            // Update UI on main thread
             runOnUiThread(() -> {
                 showLoading(false);
+                isLoading = false;
 
-                Set<String> uniqueIds = new HashSet<>(); // To track duplicates
+                // Add all records at once
+                employeeRecords.addAll(tempRecords);
 
-                if (cursor != null && cursor.moveToFirst()) {
-                    do {
-                        String employeeId = cursor.getString(cursor.getColumnIndexOrThrow("employeeId"));
-
-                        // Check for duplicates
-                        if (uniqueIds.contains(employeeId)) {
-                            continue; // Skip duplicate
-                        }
-                        uniqueIds.add(employeeId);
-
-                        EmployeeRecord record = new EmployeeRecord();
-                        record.setEmployeeId(employeeId);
-                        record.setFirstName(cursor.getString(cursor.getColumnIndexOrThrow("firstName")));
-                        record.setMiddleInitial(cursor.getString(cursor.getColumnIndexOrThrow("middleInitial")));
-                        record.setLastName(cursor.getString(cursor.getColumnIndexOrThrow("lastName")));
-                        record.setDateHired(cursor.getString(cursor.getColumnIndexOrThrow("dateHired")));
-                        record.setBasicSalary(cursor.getDouble(cursor.getColumnIndexOrThrow("basicSalary")));
-
-                        employeeRecords.add(record);
-                    } while (cursor.moveToNext());
-                    cursor.close();
-
-                    displayEmployeeRecords();
-                } else {
-                    showNoDataMessage(true);
-                    if (cursor != null) {
-                        cursor.close();
-                    }
+                // Debug log
+                System.out.println("DEBUG: Final records count: " + employeeRecords.size());
+                for (int i = 0; i < employeeRecords.size(); i++) {
+                    EmployeeRecord record = employeeRecords.get(i);
+                    System.out.println("DEBUG: Final Record " + i + ": " + record.getEmployeeId() + " - " +
+                            record.getFirstName() + " " + record.getLastName());
                 }
 
-                // Update admin info and count
+                displayEmployeeRecords();
                 updateInfoDisplay();
             });
         }).start();
@@ -174,7 +228,7 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
         StringBuilder fullNameBuilder = new StringBuilder();
         fullNameBuilder.append(record.getFirstName());
 
-        // Add middle initial with period if exists
+        // Add middle initial with period if exists and is not empty
         if (record.getMiddleInitial() != null && !record.getMiddleInitial().trim().isEmpty()) {
             fullNameBuilder.append(" ").append(record.getMiddleInitial().trim()).append(".");
         }
@@ -378,29 +432,60 @@ public class AdminEmployeeViewerActivity extends AppCompatActivity {
         private String dateHired;
         private double basicSalary;
 
-        public String getEmployeeId() { return employeeId; }
-        public void setEmployeeId(String employeeId) { this.employeeId = employeeId; }
+        public String getEmployeeId() {
+            return employeeId;
+        }
 
-        public String getFirstName() { return firstName; }
-        public void setFirstName(String firstName) { this.firstName = firstName; }
+        public void setEmployeeId(String employeeId) {
+            this.employeeId = employeeId;
+        }
 
-        public String getMiddleInitial() { return middleInitial; }
-        public void setMiddleInitial(String middleInitial) { this.middleInitial = middleInitial; }
+        public String getFirstName() {
+            return firstName;
+        }
 
-        public String getLastName() { return lastName; }
-        public void setLastName(String lastName) { this.lastName = lastName; }
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
 
-        public String getDateHired() { return dateHired; }
-        public void setDateHired(String dateHired) { this.dateHired = dateHired; }
+        public String getMiddleInitial() {
+            return middleInitial;
+        }
 
-        public double getBasicSalary() { return basicSalary; }
-        public void setBasicSalary(double basicSalary) { this.basicSalary = basicSalary; }
+        public void setMiddleInitial(String middleInitial) {
+            this.middleInitial = middleInitial;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getDateHired() {
+            return dateHired;
+        }
+
+        public void setDateHired(String dateHired) {
+            this.dateHired = dateHired;
+        }
+
+        public double getBasicSalary() {
+            return basicSalary;
+        }
+
+        public void setBasicSalary(double basicSalary) {
+            this.basicSalary = basicSalary;
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Refresh data when returning to this activity
-        loadEmployeeRecords();
-    }
+    // REMOVE or comment out the onResume() method to prevent double loading
+    // @Override
+    // protected void onResume() {
+    //     super.onResume();
+    //     // Don't refresh automatically to prevent duplicates
+    //     // loadEmployeeRecords();
+    // }
 }
