@@ -1,7 +1,6 @@
 package com.example.loansystemcalculator;
 
 import android.os.Bundle;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -11,6 +10,10 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import androidx.cardview.widget.CardView;
+
+// Added imports for Toast and AlertDialog
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 
 public class HomeEmployeeActivity extends AppCompatActivity {
 
@@ -55,9 +58,9 @@ public class HomeEmployeeActivity extends AppCompatActivity {
 
         cardTransactionHistory.setOnClickListener(v -> navigateToLoanHistory());
 
-        btnLogout.setOnClickListener(v -> logout());
+        // Updated to show confirmation dialog before logout
+        btnLogout.setOnClickListener(v -> showLogoutConfirmation());
     }
-
 
     private void updateUI() {
         tvWelcomeEmployee.setText("Welcome, Employee!");
@@ -83,21 +86,35 @@ public class HomeEmployeeActivity extends AppCompatActivity {
         finish();
     }
 
+    private void showLogoutConfirmation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Yes", (dialog, which) -> logout())
+                .setNegativeButton("No", null)
+                .show();
+    }
+
     private void logout() {
+        // Navigate to landing screen
         Intent intent = new Intent(HomeEmployeeActivity.this, LandingActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
-    }
 
+        // Show confirmation toast
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
+    }
 
     private void navigateToChooseLoan() {
         Intent intent = new Intent(HomeEmployeeActivity.this, LoanChooseTypeActivity.class);
         intent.putExtra("EMPLOYEE_ID", employeeId);
         startActivity(intent);
     }
+
     @Override
     public void onBackPressed() {
-        logout();
+        // Show logout confirmation when back button is pressed
+        showLogoutConfirmation();
     }
 }
