@@ -10,11 +10,11 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     /**
@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * ----------
      **/
     private static final String DATABASE_NAME = "LoanSystemCalculator.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3; // Updated version for seed data
 
     /**
      * ----------
@@ -80,8 +80,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Create table statements
      * ----------
      **/
-
-
 
     // Create Employee table
     private static final String CREATE_EMPLOYEE_TABLE = "CREATE TABLE " + TABLE_EMPLOYEE + "("
@@ -157,22 +155,249 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_INTEREST_RATE_TABLE);
         db.execSQL(CREATE_LOAN_APPLICATION_TABLE);
 
-        insertDefaultAdmin(db);
-        insertDefaultLoanData(db);
+        // Seed all data
+        seedDatabase(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 2) {
+        if (oldVersion < 3) {
+            // For version 3, seed database with all data
+            seedDatabase(db);
+        } else if (oldVersion < 2) {
             // Create Admin table
             db.execSQL(CREATE_ADMIN_TABLE);
-
             // Insert default admin account
             insertDefaultAdmin(db);
-
             // Initialize loan data when upgrading
             insertDefaultLoanData(db);
         }
+    }
+
+    /**
+     * ----------
+     * Seed Database Method
+     * ----------
+     **/
+
+    // Public method to seed the database with all initial data
+    public void seedDatabase(SQLiteDatabase db) {
+        Log.d("DatabaseHelper", "Seeding database...");
+
+        // Clear existing data
+        clearExistingData(db);
+
+        // Seed admin account
+        seedAdminAccount(db);
+
+        // Seed loan types and interest rates
+        seedLoanTypesAndRates(db);
+
+        // Seed sample employees
+        seedSampleEmployees(db);
+
+        Log.d("DatabaseHelper", "Database seeding completed");
+    }
+
+    // Clear existing data before seeding
+    private void clearExistingData(SQLiteDatabase db) {
+        // Delete in reverse order to respect foreign key constraints
+        db.execSQL("DELETE FROM " + TABLE_LOAN_APPLICATION);
+        db.execSQL("DELETE FROM " + TABLE_INTEREST_RATE);
+        db.execSQL("DELETE FROM " + TABLE_LOAN_TYPE);
+        db.execSQL("DELETE FROM " + TABLE_EMPLOYEE);
+        db.execSQL("DELETE FROM " + TABLE_ADMIN);
+
+        // Reset auto-increment counters
+        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_LOAN_TYPE + "'");
+        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_INTEREST_RATE + "'");
+        db.execSQL("DELETE FROM sqlite_sequence WHERE name='" + TABLE_LOAN_APPLICATION + "'");
+    }
+
+    // Seed admin account
+    private void seedAdminAccount(SQLiteDatabase db) {
+        ContentValues admin = new ContentValues();
+        admin.put(COLUMN_ADMIN_ID, "admin");
+        admin.put(COLUMN_ADMIN_PASSWORD_HASH, hashPassword("admin123"));
+        db.insert(TABLE_ADMIN, null, admin);
+        Log.d("DatabaseHelper", "Admin account seeded: admin/admin123");
+    }
+
+    // Seed loan types and interest rates
+    private void seedLoanTypesAndRates(SQLiteDatabase db) {
+        // Insert loan types
+        ContentValues emergency = new ContentValues();
+        emergency.put(COLUMN_TYPE_NAME, "Emergency");
+        emergency.put(COLUMN_MIN_AMOUNT, 5000.00);
+        emergency.put(COLUMN_MAX_AMOUNT, 25000.00);
+        emergency.put(COLUMN_SERVICE_CHARGE_RATE, 0.01);
+        long emergencyId = db.insert(TABLE_LOAN_TYPE, null, emergency);
+
+        ContentValues special = new ContentValues();
+        special.put(COLUMN_TYPE_NAME, "Special");
+        special.put(COLUMN_MIN_AMOUNT, 50000.00);
+        special.put(COLUMN_MAX_AMOUNT, 100000.00);
+        special.put(COLUMN_SERVICE_CHARGE_RATE, 0.00);
+        long specialId = db.insert(TABLE_LOAN_TYPE, null, special);
+
+        ContentValues regular = new ContentValues();
+        regular.put(COLUMN_TYPE_NAME, "Regular");
+        regular.putNull(COLUMN_MIN_AMOUNT);
+        regular.putNull(COLUMN_MAX_AMOUNT);
+        regular.put(COLUMN_SERVICE_CHARGE_RATE, 0.02);
+        long regularId = db.insert(TABLE_LOAN_TYPE, null, regular);
+
+        // Insert interest rates for Emergency (only 6 months)
+        ContentValues emergencyRate = new ContentValues();
+        emergencyRate.put(COLUMN_LOAN_TYPE_ID, emergencyId);
+        emergencyRate.put(COLUMN_MIN_MONTHS, 6);
+        emergencyRate.put(COLUMN_MAX_MONTHS, 6);
+        emergencyRate.put(COLUMN_INTEREST_RATE, 0.0060);
+        db.insert(TABLE_INTEREST_RATE, null, emergencyRate);
+
+        // Insert interest rates for Special
+        String[] specialRates = {"1,6,0.0060", "7,12,0.0062", "13,18,0.0065"};
+        for (String rate : specialRates) {
+            String[] parts = rate.split(",");
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_LOAN_TYPE_ID, specialId);
+            values.put(COLUMN_MIN_MONTHS, Integer.parseInt(parts[0]));
+            values.put(COLUMN_MAX_MONTHS, Integer.parseInt(parts[1]));
+            values.put(COLUMN_INTEREST_RATE, Double.parseDouble(parts[2]));
+            db.insert(TABLE_INTEREST_RATE, null, values);
+        }
+
+        // Insert interest rates for Regular
+        String[] regularRates = {"1,5,0.0062", "6,10,0.0065", "11,15,0.0068", "16,20,0.0075", "21,24,0.0080"};
+        for (String rate : regularRates) {
+            String[] parts = rate.split(",");
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_LOAN_TYPE_ID, regularId);
+            values.put(COLUMN_MIN_MONTHS, Integer.parseInt(parts[0]));
+            values.put(COLUMN_MAX_MONTHS, Integer.parseInt(parts[1]));
+            values.put(COLUMN_INTEREST_RATE, Double.parseDouble(parts[2]));
+            db.insert(TABLE_INTEREST_RATE, null, values);
+        }
+
+        Log.d("DatabaseHelper", "Loan types and interest rates seeded");
+    }
+
+    // Seed sample employees (some with 5+ years tenure)
+    private void seedSampleEmployees(SQLiteDatabase db) {
+        // Get current date
+        LocalDate currentDate = LocalDate.now();
+
+        // Create arrays with string representations of numbers
+        // Employees with 5+ years tenure (for special loans)
+        String[][] seniorEmployees = {
+                // First, Last, Middle, Years employed (as string), Salary (as string), Password
+                {"John", "Smith", "D", "7", "80000.00", "password123"},
+                {"Maria", "Garcia", "R", "6", "75000.00", "password123"},
+                {"Robert", "Johnson", "T", "8", "85000.00", "password123"},
+                {"Sarah", "Williams", "M", "5", "70000.00", "password123"},
+                {"Michael", "Brown", "L", "9", "90000.00", "password123"}
+        };
+
+        // Employees with less than 5 years
+        String[][] juniorEmployees = {
+                {"Emily", "Davis", "A", "2", "45000.00", "password123"},
+                {"David", "Miller", "B", "3", "50000.00", "password123"},
+                {"Jennifer", "Wilson", "C", "1", "40000.00", "password123"},
+                {"James", "Taylor", "E", "4", "55000.00", "password123"},
+                {"Linda", "Anderson", "F", "2", "42000.00", "password123"}
+        };
+
+        // Insert senior employees (5+ years)
+        for (String[] employee : seniorEmployees) {
+            String firstName = employee[0];
+            String lastName = employee[1];
+            String middleInitial = employee[2];
+            int yearsEmployed = Integer.parseInt(employee[3]); // Convert string to int
+            double salary = Double.parseDouble(employee[4]);    // Convert string to double
+            String password = employee[5];
+
+            // Calculate date hired (years ago)
+            LocalDate dateHired = currentDate.minusYears(yearsEmployed);
+
+            // Generate employee ID
+            String employeeId = generateEmployeeIdForSeeding(middleInitial, db);
+
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_EMPLOYEE_ID, employeeId);
+            values.put(COLUMN_EMPLOYEE_FIRST_NAME, firstName);
+            values.put(COLUMN_EMPLOYEE_MIDDLE_INITIAL, middleInitial);
+            values.put(COLUMN_EMPLOYEE_LAST_NAME, lastName);
+            values.put(COLUMN_EMPLOYEE_DATE_HIRED, dateHired.toString());
+            values.put(COLUMN_EMPLOYEE_PASSWORD_HASH, hashPassword(password));
+            values.put(COLUMN_EMPLOYEE_BASIC_SALARY, salary);
+
+            db.insert(TABLE_EMPLOYEE, null, values);
+            Log.d("DatabaseHelper", "Seeded senior employee: " + employeeId + " (" + firstName + " " + lastName + ")");
+        }
+
+        // Insert junior employees (less than 5 years)
+        for (String[] employee : juniorEmployees) {
+            String firstName = employee[0];
+            String lastName = employee[1];
+            String middleInitial = employee[2];
+            int yearsEmployed = Integer.parseInt(employee[3]); // Convert string to int
+            double salary = Double.parseDouble(employee[4]);    // Convert string to double
+            String password = employee[5];
+
+            // Calculate date hired (years ago)
+            LocalDate dateHired = currentDate.minusYears(yearsEmployed);
+
+            // Generate employee ID
+            String employeeId = generateEmployeeIdForSeeding(middleInitial, db);
+
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_EMPLOYEE_ID, employeeId);
+            values.put(COLUMN_EMPLOYEE_FIRST_NAME, firstName);
+            values.put(COLUMN_EMPLOYEE_MIDDLE_INITIAL, middleInitial);
+            values.put(COLUMN_EMPLOYEE_LAST_NAME, lastName);
+            values.put(COLUMN_EMPLOYEE_DATE_HIRED, dateHired.toString());
+            values.put(COLUMN_EMPLOYEE_PASSWORD_HASH, hashPassword(password));
+            values.put(COLUMN_EMPLOYEE_BASIC_SALARY, salary);
+
+            db.insert(TABLE_EMPLOYEE, null, values);
+            Log.d("DatabaseHelper", "Seeded junior employee: " + employeeId + " (" + firstName + " " + lastName + ")");
+        }
+
+        Log.d("DatabaseHelper", "Sample employees seeded (10 total, 5 with 5+ years tenure)");
+    }
+
+    // Helper method to generate employee ID for seeding
+    private String generateEmployeeIdForSeeding(String middleInitial, SQLiteDatabase db) {
+        String firstInitial = middleInitial.length() >= 1 ?
+                middleInitial.substring(0, 1).toUpperCase() : "X";
+
+        String baseId;
+        int attempts = 0;
+
+        do {
+            // Generate random 5-digit number
+            int randomNum = (int)(Math.random() * 100000);
+            String randomDigits = String.format("%05d", randomNum);
+            baseId = firstInitial + randomDigits;
+            attempts++;
+
+            // Check if ID exists
+            Cursor cursor = db.rawQuery(
+                    "SELECT " + COLUMN_EMPLOYEE_ID + " FROM " + TABLE_EMPLOYEE +
+                            " WHERE " + COLUMN_EMPLOYEE_ID + " = ?",
+                    new String[]{baseId}
+            );
+            boolean exists = cursor.getCount() > 0;
+            cursor.close();
+
+            if (!exists) {
+                return baseId;
+            }
+
+            if (attempts > 1000) {
+                throw new RuntimeException("Unable to generate unique employee ID after 1000 attempts");
+            }
+        } while (true);
     }
 
     /**
@@ -215,7 +440,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return baseId;
     }
 
-
     // Hash password using SHA-256
     private String hashPassword(String password) {
         try {
@@ -232,7 +456,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             throw new RuntimeException(e);
         }
     }
-
 
     // Register employee with auto-generated ID
     public boolean registerEmployee(String firstName, String middleInitial,
@@ -347,6 +570,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return 0.0;
     }
 
+    // Check if employee is eligible for special loan (5+ years tenure)
+    public boolean isEmployeeEligibleForSpecialLoan(String employeeId) {
+        LocalDate dateHired = getEmployeeDateHired(employeeId);
+        if (dateHired == null) {
+            return false;
+        }
+
+        LocalDate currentDate = LocalDate.now();
+        long yearsEmployed = ChronoUnit.YEARS.between(dateHired, currentDate);
+
+        return yearsEmployed >= 5;
+    }
+
     /**
      * ----------
      * Admin Methods
@@ -403,59 +639,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Insert loan types method (Emergency, Special, Regular)
     private void insertDefaultLoanData(SQLiteDatabase db) {
-        // Insert loan types
-        ContentValues emergency = new ContentValues();
-        emergency.put(COLUMN_TYPE_NAME, "Emergency");
-        emergency.put(COLUMN_MIN_AMOUNT, 5000.00);
-        emergency.put(COLUMN_MAX_AMOUNT, 25000.00);
-        emergency.put(COLUMN_SERVICE_CHARGE_RATE, 0.01);
-        db.insert(TABLE_LOAN_TYPE, null, emergency);
-
-        ContentValues special = new ContentValues();
-        special.put(COLUMN_TYPE_NAME, "Special");
-        special.put(COLUMN_MIN_AMOUNT, 50000.00);
-        special.put(COLUMN_MAX_AMOUNT, 100000.00);
-        special.put(COLUMN_SERVICE_CHARGE_RATE, 0.00);
-        db.insert(TABLE_LOAN_TYPE, null, special);
-
-        ContentValues regular = new ContentValues();
-        regular.put(COLUMN_TYPE_NAME, "Regular");
-        regular.putNull(COLUMN_MIN_AMOUNT);
-        regular.putNull(COLUMN_MAX_AMOUNT);
-        regular.put(COLUMN_SERVICE_CHARGE_RATE, 0.02);
-        db.insert(TABLE_LOAN_TYPE, null, regular);
-
-        // Insert interest rates for Emergency (only 6 months)
-        ContentValues emergencyRate = new ContentValues();
-        emergencyRate.put(COLUMN_LOAN_TYPE_ID, 1);
-        emergencyRate.put(COLUMN_MIN_MONTHS, 6);
-        emergencyRate.put(COLUMN_MAX_MONTHS, 6);
-        emergencyRate.put(COLUMN_INTEREST_RATE, 0.0060);
-        db.insert(TABLE_INTEREST_RATE, null, emergencyRate);
-
-        // Insert interest rates for Special
-        String[] specialRates = {"1,6,0.0060", "7,12,0.0062", "13,18,0.0065"};
-        for (String rate : specialRates) {
-            String[] parts = rate.split(",");
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_LOAN_TYPE_ID, 2);
-            values.put(COLUMN_MIN_MONTHS, Integer.parseInt(parts[0]));
-            values.put(COLUMN_MAX_MONTHS, Integer.parseInt(parts[1]));
-            values.put(COLUMN_INTEREST_RATE, Double.parseDouble(parts[2]));
-            db.insert(TABLE_INTEREST_RATE, null, values);
-        }
-
-        // Insert interest rates for Regular
-        String[] regularRates = {"1,5,0.0062", "6,10,0.0065", "11,15,0.0068", "16,20,0.0075", "21,24,0.0080"};
-        for (String rate : regularRates) {
-            String[] parts = rate.split(",");
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_LOAN_TYPE_ID, 3);
-            values.put(COLUMN_MIN_MONTHS, Integer.parseInt(parts[0]));
-            values.put(COLUMN_MAX_MONTHS, Integer.parseInt(parts[1]));
-            values.put(COLUMN_INTEREST_RATE, Double.parseDouble(parts[2]));
-            db.insert(TABLE_INTEREST_RATE, null, values);
-        }
+        // This method is now called from seedLoanTypesAndRates
+        seedLoanTypesAndRates(db);
     }
 
     // Create loan application
@@ -512,8 +697,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return 0.0;
     }
-
-    // Add this method to DatabaseHelper.java in the Loan Methods section
 
     // Get all loan applications for a specific employee
     public Cursor getEmployeeLoanApplications(String employeeId) {
@@ -595,7 +778,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * ----------
      **/
 
-// Check if loan types are initialized, and initialize if not
+    // Check if loan types are initialized, and initialize if not
     public void initializeLoanDataIfNeeded() {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -630,5 +813,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return -1; // Not found
+    }
+
+    /**
+     * ----------
+     * Public seed method for activities to call
+     * ----------
+     **/
+
+    // Public method to re-seed the database (can be called from activities)
+    public void reseedDatabase() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        seedDatabase(db);
+    }
+
+    // Check if database is empty (for testing)
+    public boolean isDatabaseEmpty() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_EMPLOYEE, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int count = cursor.getInt(0);
+            cursor.close();
+            return count == 0;
+        }
+        return true;
     }
 }
