@@ -1,0 +1,63 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select number of months to pay"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupMonths"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio1to5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1-5 months (0.62% per month)" />
+
+        <RadioButton
+            android:id="@+id/radio6to10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6-10 months (0.65% per month)" />
+
+        <RadioButton
+            android:id="@+id/radio11to15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="11-15 months (0.68% per month)" />
+
+        <RadioButton
+            android:id="@+id/radio16to20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16-20 months (0.75% per month)" />
+
+        <RadioButton
+            android:id="@+id/radio21to24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="21-24 months (0.80% per month)" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/dark_brown"
+        android:text="Submit"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
